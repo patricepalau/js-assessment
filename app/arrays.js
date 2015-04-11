@@ -3,10 +3,12 @@ if (typeof define !== 'function') { var define = require('amdefine')(module); }
 define(function() {
   return {
     indexOf : function(arr, item) {
+        // requires es5
         return arr.indexOf(item);
     },
 
     sum : function(arr) {
+        // requires es5
         return arr.reduce(function (prev, item) {
             prev = prev + item;
             return prev;
@@ -14,6 +16,7 @@ define(function() {
     },
 
     remove : function(arr, item) {
+        // requires es5
         return arr.filter(function (current) {
             return current !== item;
         });
@@ -52,12 +55,20 @@ define(function() {
     },
 
     insert : function(arr, item, index) {
-        var tail = arr.splice(index);
-        arr.push(item);
-        return arr.concat(tail);
+        // original solution:
+        // var tail = arr.splice(index);
+        // arr.push(item);
+        // return arr.concat(tail);
+        // shorter, since splice takes 2 extra args
+        // 1/ the index at which to make modifications
+        // 2/ the number of items to delete
+        // 3/ items to add - method accepts any number of params
+        arr.splice(index, 0, item);
+        return arr;
     },
 
     count : function(arr, item) {
+        // requires es5
         return arr.reduce(function (prev, current) {
             if (current === item){
                 prev++;
@@ -67,6 +78,7 @@ define(function() {
     },
 
     duplicates : function(arr) {
+        // requires es5
         var myarr = [];
 
         for (var i = 0; i < arr.length; i++) {
@@ -86,12 +98,14 @@ define(function() {
     },
 
     square : function(arr) {
+        // requires es5
         return arr.map(function (item) {
             return Math.pow(item, 2);
         });
     },
 
     findAllOccurrences : function(arr, target) {
+        // requires es5
         return arr.map(function (item, index) {
             return (item === target ? index : undefined);
         }).filter(function (item) {
