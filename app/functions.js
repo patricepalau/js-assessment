@@ -63,14 +63,41 @@ define(function() {
     },
 
     curryIt : function(fn) {
+        // first attempt:
         // simple solution, assuming a known nb of params
-        return function (x) {
-            return function (y) {
-                return function (z) {
-                    return fn(x, y, z);
-                }
-            };
+        // return function (x) {
+        //     return function (y) {
+        //         return function (z) {
+        //             return fn(x, y, z);
+        //         }
+        //     };
+        // };
+
+        // generic solution
+        // this is a private variable, visible from the function
+        // that this method returns - since it creates a closure
+        var collectedArguments = [],
+            // we remember the expected nb of args of fn
+            nbArgs = fn.length;
+
+        // curryIt must return a function with 1 arg
+        var func = function myfunc(arg) {
+            // collect that arg
+            collectedArguments.push(arg);
+
+            // if we collected the expected nb of args
+            if (collectedArguments.length === nbArgs) {
+                // apply them to our original function
+                return fn.apply(null, collectedArguments);
+            }
+            else {
+                // otherwise keep returning this function
+                // so keep collecting args
+                return myfunc;
+            }
         };
+
+        return func;
     }
   };
 });
