@@ -2,27 +2,32 @@ if (typeof define !== 'function') { var define = require('amdefine')(module); }
 
 define(function() {
   return {
-    listFiles: function listFiles(data, dirName) {
-        var results = [];
+    listFiles: function(data, dirName) {
+        // recursive function
+        function _listFiles(data, dirName) {
+            var results = [],
+                currentDir = data.dir,
+                files = data.files;
 
-        var currentDir = data.dir,
-            files = data.files;
-
-        files.forEach(function (file) {
-            if (typeof file === 'string') {
-                if (!dirName || dirName && dirName === currentDir) {
-                    results.push(file);
+            files.forEach(function (file) {
+                if (typeof file === 'string') {
+                    if (!dirName || dirName && dirName === currentDir) {
+                        results.push(file);
+                    }
                 }
-            }
-            else {
-                if (dirName && dirName === currentDir) {
-                    dirName = undefined;
+                else {
+                    if (dirName && dirName === currentDir) {
+                        dirName = undefined;
+                    }
+                    results = results.concat(_listFiles(file, dirName));
                 }
-                results = results.concat(listFiles(file, dirName));
-            }
-        });
+            });
 
-        return results;
+            return results;
+        }
+
+        // run recursive function
+        return _listFiles(data, dirName);
     },
 
     permute: function permute(arr) {
